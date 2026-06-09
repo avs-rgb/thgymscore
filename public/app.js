@@ -275,19 +275,19 @@ function shareWhatsapp() {
     return;
   }
 
+  const headers = ['תלמיד', ...sheet.metrics.map((metric) => metric.label), 'ממוצע'];
   const lines = [
     `thgymscore - כיתה ${sheet.name}`,
     '',
-    ...latestTeacherResults.map((student) => {
-      const scores = sheet.metrics
-        .map((metric) => {
-          const metricResult = student.results.find((item) => item.key === metric.key);
-          return `${metric.label}: ${metricResult?.result?.score ?? ''}`;
-        })
-        .join(', ');
-
-      return `${student.studentName} | ${scores} | ממוצע: ${student.averageScore ?? ''}`;
-    }),
+    headers.join(' | '),
+    ...latestTeacherResults.map((student) => [
+      student.studentName,
+      ...sheet.metrics.map((metric) => {
+        const metricResult = student.results.find((item) => item.key === metric.key);
+        return metricResult?.result?.score ?? '';
+      }),
+      student.averageScore ?? '',
+    ].join(' | ')),
   ];
 
   const url = `https://wa.me/?text=${encodeURIComponent(lines.join('\n'))}`;
