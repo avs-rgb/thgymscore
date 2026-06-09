@@ -293,13 +293,13 @@ function shareWhatsapp() {
         return null;
       }
 
-      const parts = [student.studentName, ...visibleScores];
+      const parts = [`${student.studentName}: ${visibleScores.join(', ')}`];
 
       if (visibleScores.length > 1 && student.averageScore !== null) {
-        parts.push(`ממוצע: ${student.averageScore}`);
+        parts.push(`ממוצע - ${student.averageScore}`);
       }
 
-      return parts.join(' | ');
+      return parts.join(', ');
     })
     .filter(Boolean);
 
