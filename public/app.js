@@ -2,6 +2,7 @@ const sheetSelect = document.querySelector('#sheet-select');
 const scoreForm = document.querySelector('#score-form');
 const averageScore = document.querySelector('#average-score');
 const resultsList = document.querySelector('#results-list');
+const studentShareWhatsappButton = document.querySelector('#student-share-whatsapp');
 const tableContainer = document.querySelector('#table-container');
 const studentTabButton = document.querySelector('#student-tab-button');
 const teacherTabButton = document.querySelector('#teacher-tab-button');
@@ -18,6 +19,7 @@ const teacherResultsTable = document.querySelector('#teacher-results-table');
 let sheets = [];
 let activeView = 'student';
 let latestTeacherResults = [];
+let latestStudentResult = null;
 
 function metricHint(metric) {
   const directionText = metric.direction === 'higher_better' ? 'יותר גבוה = יותר טוב' : 'יותר נמוך = יותר טוב';
@@ -89,6 +91,7 @@ function renderStudentForm() {
 }
 
 function renderStudentResults(data) {
+  latestStudentResult = data;
   averageScore.textContent = data.averageScore === null
     ? 'לא הוזנו ערכים לחישוב'
     : `ציון ממוצע: ${data.averageScore}`;
@@ -107,6 +110,37 @@ function renderStudentResults(data) {
   if (!resultsList.innerHTML) {
     resultsList.innerHTML = '<p>הזינו לפחות ערך אחד כדי לקבל ציון.</p>';
   }
+}
+
+function shareStudentWhatsapp() {
+  const sheet = selectedSheet();
+
+  if (!latestStudentResult) {
+    return;
+  }
+
+  const visibleScores = latestStudentResult.results
+    .filter((item) => item.result)
+    .map((item) => `${item.label} - ${item.result.score}`);
+
+  if (!visibleScores.length) {
+    return;
+  }
+
+  const parts = [`תלמיד: ${visibleScores.join(', ')}`];
+
+  if (visibleScores.length > 1 && latestStudentResult.averageScore !== null) {
+    parts.push(`ממוצע - ${latestStudentResult.averageScore}`);
+  }
+
+  const lines = [
+    `thgymscore - כיתה ${sheet.name}`,
+    '',
+    parts.join(', '),
+  ];
+
+  const url = `https://wa.me/?text=${encodeURIComponent(lines.join('\n'))}`;
+  window.open(url, '_blank', 'noopener,noreferrer');
 }
 
 function renderTeacherEntryTable() {
@@ -387,6 +421,7 @@ function handleTeacherEntryKeydown(event) {
 
 function renderCurrentView() {
   renderStudentForm();
+  latestStudentResult = null;
   renderStudentResults({ results: [], averageScore: null });
   renderTeacherView();
 }
@@ -407,6 +442,7 @@ async function init() {
   sheetSelect.addEventListener('change', renderCurrentView);
   studentCountSelect.addEventListener('change', renderTeacherView);
   scoreForm.addEventListener('submit', calculateScore);
+  studentShareWhatsappButton.addEventListener('click', shareStudentWhatsapp);
   teacherCalculateButton.addEventListener('click', calculateTeacherScores);
   downloadCsvButton.addEventListener('click', downloadCsv);
   shareWhatsappButton.addEventListener('click', shareWhatsapp);
