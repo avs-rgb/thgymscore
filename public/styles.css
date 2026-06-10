@@ -15,6 +15,13 @@ body {
   padding: 24px;
 }
 
+.site-credit {
+  text-align: left;
+  color: #9a7a67;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
 .hero {
   margin-bottom: 24px;
 }
