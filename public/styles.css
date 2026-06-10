@@ -53,8 +53,9 @@ p {
 }
 
 .subtitle {
-  max-width: 700px;
+  max-width: none;
   color: #7a5a4c;
+  font-size: 15px;
 }
 
 .panel {
