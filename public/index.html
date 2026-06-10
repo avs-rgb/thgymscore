@@ -9,7 +9,7 @@
   <body>
     <main class="page">
       <div class="top-bar">
-        <div class="site-credit">created by AVS</div>
+        <div class="site-credit">created by avs-rgb</div>
         <button id="share-site-whatsapp" type="button" class="share-site-button">שיתוף האתר ב-WhatsApp</button>
       </div>
       <section class="hero">
@@ -20,21 +20,30 @@
       <section class="top-controls">
         <section class="tabs-panel">
           <section class="tabs" aria-label="מצבי שימוש">
-            <button id="student-tab-button" class="tab-button is-active" type="button">תלמידים</button>
+            <button id="male-student-tab-button" class="tab-button is-active" type="button">תלמידים</button>
+            <button id="female-student-tab-button" class="tab-button" type="button">תלמידות</button>
             <button id="teacher-tab-button" class="tab-button" type="button">מורים</button>
-          </section>
-
-          <section class="panel class-selector-panel">
-            <label class="field-label" for="sheet-select">בחירת כיתה</label>
-            <select id="sheet-select" class="class-select"></select>
           </section>
         </section>
 
         <section id="teacher-top-controls" class="teacher-top-controls teacher-only-controls is-hidden">
+          <section class="panel teacher-gender-panel">
+            <label class="field-label" for="teacher-gender">קבוצת תלמידים</label>
+            <select id="teacher-gender">
+              <option value="male">תלמידים</option>
+              <option value="female">תלמידות</option>
+            </select>
+          </section>
+
           <section class="panel teacher-student-count-panel">
             <label class="field-label" for="student-count">מספר תלמידים</label>
             <select id="student-count"></select>
           </section>
+        </section>
+
+        <section class="panel class-selector-panel">
+          <label class="field-label" for="sheet-select">בחירת כיתה</label>
+          <select id="sheet-select" class="class-select"></select>
         </section>
       </section>
 

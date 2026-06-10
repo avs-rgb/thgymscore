@@ -98,13 +98,13 @@ p {
   display: flex;
   flex-direction: column;
   width: 154px;
-  min-height: 116px;
+  min-height: 120px;
   justify-content: center;
 }
 
 .class-select {
   width: 100%;
-  min-height: 40px;
+  min-height: 48px;
 }
 
 .top-controls {
@@ -129,18 +129,23 @@ p {
 
 .teacher-top-controls {
   display: grid;
-  grid-template-columns: 154px;
+  grid-template-columns: 154px 154px;
   gap: 18px;
   align-items: flex-start;
   flex: 0 0 auto;
+  order: 3;
+}
+
+.top-controls > .class-selector-panel {
+  order: 2;
 }
 
 .tabs {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   width: 154px;
-  min-height: 116px;
+  min-height: 120px;
 }
 
 .tabs .tab-button {
@@ -155,10 +160,11 @@ p {
 .tab-button {
   background: #f1dccb;
   color: #6b4333;
-  min-height: 48px;
-  font-size: 15px;
-  border-radius: 14px;
+  min-height: 36px;
+  font-size: 14px;
+  border-radius: 16px;
   border: 1px solid rgba(160, 106, 78, 0.14);
+  font-weight: 700;
 }
 
 .tab-button.is-active {
@@ -198,7 +204,16 @@ p {
 .teacher-student-count-panel {
   width: 100%;
   min-width: 0;
-  min-height: 118px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.teacher-gender-panel {
+  width: 100%;
+  min-width: 0;
+  min-height: 120px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -265,6 +280,8 @@ p {
   font-weight: 700;
   min-height: 22px;
   color: #5a372c;
+  font-size: 15px;
+  text-align: center;
 }
 
 select,
@@ -273,11 +290,17 @@ button {
   width: 100%;
   border: 1px solid #ddc3ae;
   border-radius: 14px;
-  padding: 12px 14px;
+  padding: 10px 14px;
   font: inherit;
   background: #fffdf9;
   color: #4b2f25;
   transition: border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
+}
+
+select {
+  font-size: 14px;
+  text-align: center;
+  text-align-last: center;
 }
 
 select:focus,

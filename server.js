@@ -1,12 +1,16 @@
 const express = require('express');
 const path = require('path');
-const { loadSheets, scoreMetric } = require('./lib/workbook');
+const { loadSheetsByGender, scoreMetric } = require('./lib/workbook');
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
+
+function resolveSheets(gender) {
+  return loadSheetsByGender(gender === 'female' ? 'female' : 'male');
+}
 
 function buildScoreResponse(sheet, values) {
   const results = sheet.metrics.map((metric) => {
@@ -35,12 +39,15 @@ function buildScoreResponse(sheet, values) {
 }
 
 app.get('/api/sheets', (request, response) => {
-  response.json({ sheets: loadSheets() });
+  response.json({
+    maleSheets: resolveSheets('male'),
+    femaleSheets: resolveSheets('female'),
+  });
 });
 
 app.post('/api/score', (request, response) => {
-  const { sheetId, values } = request.body || {};
-  const sheets = loadSheets();
+  const { sheetId, values, gender } = request.body || {};
+  const sheets = resolveSheets(gender);
   const sheet = sheets.find((item) => item.id === sheetId);
 
   if (!sheet) {
@@ -52,8 +59,8 @@ app.post('/api/score', (request, response) => {
 });
 
 app.post('/api/bulk-score', (request, response) => {
-  const { sheetId, students } = request.body || {};
-  const sheets = loadSheets();
+  const { sheetId, students, gender } = request.body || {};
+  const sheets = resolveSheets(gender);
   const sheet = sheets.find((item) => item.id === sheetId);
 
   if (!sheet) {

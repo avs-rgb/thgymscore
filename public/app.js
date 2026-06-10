@@ -5,11 +5,13 @@ const resultsList = document.querySelector('#results-list');
 const studentShareWhatsappButton = document.querySelector('#student-share-whatsapp');
 const shareSiteWhatsappButton = document.querySelector('#share-site-whatsapp');
 const tableContainer = document.querySelector('#table-container');
-const studentTabButton = document.querySelector('#student-tab-button');
+const maleStudentTabButton = document.querySelector('#male-student-tab-button');
+const femaleStudentTabButton = document.querySelector('#female-student-tab-button');
 const teacherTabButton = document.querySelector('#teacher-tab-button');
 const studentView = document.querySelector('#student-view');
 const teacherView = document.querySelector('#teacher-view');
 const teacherTopControls = document.querySelector('#teacher-top-controls');
+const teacherGenderSelect = document.querySelector('#teacher-gender');
 const studentCountSelect = document.querySelector('#student-count');
 const teacherCalculateButton = document.querySelector('#teacher-calculate');
 const downloadCsvButton = document.querySelector('#download-csv');
@@ -17,10 +19,29 @@ const shareWhatsappButton = document.querySelector('#share-whatsapp');
 const teacherEntryTable = document.querySelector('#teacher-entry-table');
 const teacherResultsTable = document.querySelector('#teacher-results-table');
 
-let sheets = [];
-let activeView = 'student';
+let sheetSets = {
+  male: [],
+  female: [],
+};
+let activeView = 'student_male';
 let latestTeacherResults = [];
 let latestStudentResult = null;
+
+function activeStudentLabel() {
+  return activeView === 'student_female' ? 'תלמידה' : 'תלמיד';
+}
+
+function activeStudentGender() {
+  return activeView === 'student_female' ? 'female' : 'male';
+}
+
+function activeTeacherStudentLabel() {
+  return teacherGenderSelect.value === 'female' ? 'תלמידה' : 'תלמיד';
+}
+
+function activeTeacherGender() {
+  return teacherGenderSelect.value === 'female' ? 'female' : 'male';
+}
 
 function formatCompactEntry(seconds) {
   const minutes = Math.floor(seconds / 60);
@@ -47,7 +68,8 @@ function studentExample(metric) {
 }
 
 function selectedSheet() {
-  return sheets.find((sheet) => sheet.id === sheetSelect.value);
+  const gender = activeView === 'teacher' ? activeTeacherGender() : activeStudentGender();
+  return sheetSets[gender].find((sheet) => sheet.id === sheetSelect.value);
 }
 
 function createStudentOptions() {
@@ -135,7 +157,7 @@ function shareStudentWhatsapp() {
     return;
   }
 
-  const parts = [`תלמיד: ${visibleScores.join(', ')}`];
+  const parts = [`${activeStudentLabel()}: ${visibleScores.join(', ')}`];
 
   if (visibleScores.length > 1 && latestStudentResult.averageScore !== null) {
     parts.push(`ממוצע - ${latestStudentResult.averageScore}`);
@@ -165,14 +187,14 @@ function renderTeacherEntryTable() {
     <table class="teacher-entry-table">
       <thead>
         <tr>
-          <th>תלמיד</th>
+          <th>${activeTeacherStudentLabel()}</th>
           ${sheet.metrics.map((metric) => `<th>${metric.label}</th>`).join('')}
         </tr>
       </thead>
       <tbody>
         ${Array.from({ length: studentCount }, (_, index) => `
           <tr>
-            <td class="student-name-cell">תלמיד ${index + 1}</td>
+            <td class="student-name-cell">${activeTeacherStudentLabel()} ${index + 1}</td>
             ${sheet.metrics.map((metric) => `
               <td>
                 <input
@@ -195,7 +217,7 @@ function renderTeacherResultsTable(students = []) {
     <table>
       <thead>
         <tr>
-          <th>תלמיד</th>
+          <th>${activeTeacherStudentLabel()}</th>
           ${sheet.metrics.map((metric) => `<th>${metric.label}</th>`).join('')}
           <th>ממוצע</th>
         </tr>
@@ -213,7 +235,7 @@ function renderTeacherResultsTable(students = []) {
         `).join('') : `
           ${Array.from({ length: Number(studentCountSelect.value) }, (_, index) => `
             <tr>
-              <td class="student-name-cell">תלמיד ${index + 1}</td>
+              <td class="student-name-cell">${activeTeacherStudentLabel()} ${index + 1}</td>
               ${sheet.metrics.map(() => '<td></td>').join('')}
               <td class="average-cell"></td>
             </tr>
@@ -234,7 +256,7 @@ function collectTeacherStudents() {
   const studentCount = Number(studentCountSelect.value);
 
   return Array.from({ length: studentCount }, (_, studentIndex) => ({
-    studentName: `תלמיד ${studentIndex + 1}`,
+    studentName: `${activeTeacherStudentLabel()} ${studentIndex + 1}`,
     values: Object.fromEntries(sheet.metrics.map((metric) => {
       const input = teacherEntryTable.querySelector(`[data-student-index="${studentIndex}"][data-metric-key="${metric.key}"]`);
       return [metric.key, input?.value || ''];
@@ -371,10 +393,11 @@ function renderTeacherView() {
 
 function setActiveView(viewName) {
   activeView = viewName;
-  const isStudentView = viewName === 'student';
+  const isStudentView = viewName.startsWith('student');
 
-  studentTabButton.classList.toggle('is-active', isStudentView);
-  teacherTabButton.classList.toggle('is-active', !isStudentView);
+  maleStudentTabButton.classList.toggle('is-active', viewName === 'student_male');
+  femaleStudentTabButton.classList.toggle('is-active', viewName === 'student_female');
+  teacherTabButton.classList.toggle('is-active', viewName === 'teacher');
   studentView.classList.toggle('is-hidden', !isStudentView);
   teacherView.classList.toggle('is-hidden', isStudentView);
   teacherTopControls.classList.toggle('is-hidden', isStudentView);
@@ -392,6 +415,7 @@ async function calculateScore(event) {
     },
     body: JSON.stringify({
       sheetId: selectedSheet().id,
+      gender: activeStudentGender(),
       values,
     }),
   });
@@ -408,6 +432,7 @@ async function calculateTeacherScores() {
     },
     body: JSON.stringify({
       sheetId: selectedSheet().id,
+      gender: activeTeacherGender(),
       students: collectTeacherStudents(),
     }),
   });
@@ -442,17 +467,21 @@ function renderCurrentView() {
 async function init() {
   const response = await fetch('/api/sheets');
   const data = await response.json();
-  sheets = data.sheets;
+  sheetSets = {
+    male: data.maleSheets,
+    female: data.femaleSheets,
+  };
 
-  sheetSelect.innerHTML = sheets
+  sheetSelect.innerHTML = sheetSets.male
     .map((sheet) => `<option value="${sheet.id}">${sheet.name}</option>`)
     .join('');
 
   createStudentOptions();
   renderCurrentView();
-  setActiveView('student');
+  setActiveView('student_male');
 
   sheetSelect.addEventListener('change', renderCurrentView);
+  teacherGenderSelect.addEventListener('change', renderTeacherView);
   studentCountSelect.addEventListener('change', renderTeacherView);
   scoreForm.addEventListener('submit', calculateScore);
   studentShareWhatsappButton.addEventListener('click', shareStudentWhatsapp);
@@ -461,8 +490,18 @@ async function init() {
   downloadCsvButton.addEventListener('click', downloadCsv);
   shareWhatsappButton.addEventListener('click', shareWhatsapp);
   teacherEntryTable.addEventListener('keydown', handleTeacherEntryKeydown);
-  studentTabButton.addEventListener('click', () => setActiveView('student'));
-  teacherTabButton.addEventListener('click', () => setActiveView('teacher'));
+  maleStudentTabButton.addEventListener('click', () => {
+    setActiveView('student_male');
+    renderCurrentView();
+  });
+  femaleStudentTabButton.addEventListener('click', () => {
+    setActiveView('student_female');
+    renderCurrentView();
+  });
+  teacherTabButton.addEventListener('click', () => {
+    setActiveView('teacher');
+    renderCurrentView();
+  });
 }
 
 init();
