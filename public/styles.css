@@ -219,6 +219,28 @@ p {
   justify-content: center;
 }
 
+.teacher-gender-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.teacher-gender-tab {
+  min-height: 48px;
+  border-radius: 16px;
+  background: #f1dccb;
+  color: #6b4333;
+  border: 1px solid rgba(160, 106, 78, 0.14);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.teacher-gender-tab.is-active {
+  background: #c9734f;
+  color: #ffffff;
+  box-shadow: 0 10px 20px rgba(201, 115, 79, 0.24);
+}
+
 .teacher-student-count-panel select,
 .teacher-panel-button {
   width: 100%;

@@ -28,11 +28,11 @@
 
         <section id="teacher-top-controls" class="teacher-top-controls teacher-only-controls is-hidden">
           <section class="panel teacher-gender-panel">
-            <label class="field-label" for="teacher-gender">קבוצת תלמידים</label>
-            <select id="teacher-gender">
-              <option value="male">תלמידים</option>
-              <option value="female">תלמידות</option>
-            </select>
+            <label class="field-label">קבוצת תלמידים</label>
+            <div class="teacher-gender-tabs" aria-label="קבוצת תלמידים">
+              <button id="teacher-male-tab-button" type="button" class="teacher-gender-tab is-active">תלמידים</button>
+              <button id="teacher-female-tab-button" type="button" class="teacher-gender-tab">תלמידות</button>
+            </div>
           </section>
 
           <section class="panel teacher-student-count-panel">

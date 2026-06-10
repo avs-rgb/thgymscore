@@ -11,7 +11,8 @@ const teacherTabButton = document.querySelector('#teacher-tab-button');
 const studentView = document.querySelector('#student-view');
 const teacherView = document.querySelector('#teacher-view');
 const teacherTopControls = document.querySelector('#teacher-top-controls');
-const teacherGenderSelect = document.querySelector('#teacher-gender');
+const teacherMaleTabButton = document.querySelector('#teacher-male-tab-button');
+const teacherFemaleTabButton = document.querySelector('#teacher-female-tab-button');
 const studentCountSelect = document.querySelector('#student-count');
 const teacherCalculateButton = document.querySelector('#teacher-calculate');
 const downloadCsvButton = document.querySelector('#download-csv');
@@ -24,6 +25,7 @@ let sheetSets = {
   female: [],
 };
 let activeView = 'student_male';
+let activeTeacherGenderValue = 'male';
 let latestTeacherResults = [];
 let latestStudentResult = null;
 
@@ -36,11 +38,16 @@ function activeStudentGender() {
 }
 
 function activeTeacherStudentLabel() {
-  return teacherGenderSelect.value === 'female' ? 'תלמידה' : 'תלמיד';
+  return activeTeacherGenderValue === 'female' ? 'תלמידה' : 'תלמיד';
 }
 
 function activeTeacherGender() {
-  return teacherGenderSelect.value === 'female' ? 'female' : 'male';
+  return activeTeacherGenderValue;
+}
+
+function syncTeacherGenderTabs() {
+  teacherMaleTabButton.classList.toggle('is-active', activeTeacherGenderValue === 'male');
+  teacherFemaleTabButton.classList.toggle('is-active', activeTeacherGenderValue === 'female');
 }
 
 function formatCompactEntry(seconds) {
@@ -479,9 +486,9 @@ async function init() {
   createStudentOptions();
   renderCurrentView();
   setActiveView('student_male');
+  syncTeacherGenderTabs();
 
   sheetSelect.addEventListener('change', renderCurrentView);
-  teacherGenderSelect.addEventListener('change', renderTeacherView);
   studentCountSelect.addEventListener('change', renderTeacherView);
   scoreForm.addEventListener('submit', calculateScore);
   studentShareWhatsappButton.addEventListener('click', shareStudentWhatsapp);
@@ -501,6 +508,16 @@ async function init() {
   teacherTabButton.addEventListener('click', () => {
     setActiveView('teacher');
     renderCurrentView();
+  });
+  teacherMaleTabButton.addEventListener('click', () => {
+    activeTeacherGenderValue = 'male';
+    syncTeacherGenderTabs();
+    renderTeacherView();
+  });
+  teacherFemaleTabButton.addEventListener('click', () => {
+    activeTeacherGenderValue = 'female';
+    syncTeacherGenderTabs();
+    renderTeacherView();
   });
 }
 
