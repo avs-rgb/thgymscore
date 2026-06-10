@@ -21,21 +21,28 @@ let activeView = 'student';
 let latestTeacherResults = [];
 let latestStudentResult = null;
 
-function metricHint(metric) {
-  const directionText = metric.direction === 'higher_better' ? 'יותר גבוה = יותר טוב' : 'יותר נמוך = יותר טוב';
-  return `${directionText} | טווח בטבלה: ${metric.bestDisplay} עד ${metric.worstDisplay}`;
+function formatCompactEntry(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes}${String(remainingSeconds).padStart(2, '0')}`;
 }
 
-function inputPlaceholder(metric) {
+function studentExample(metric) {
+  const exampleEntry = metric.entries.find((entry) => entry.score === 90);
+
+  if (!exampleEntry) {
+    return '';
+  }
+
   if (metric.valueType === 'beeps') {
-    return 'למשל 13-7 או 137';
+    return String(exampleEntry.raw);
   }
 
-  if (metric.valueType === 'number') {
-    return 'למשל 30';
+  if (metric.valueType === 'time_string' || metric.valueType === 'time_compact' || metric.valueType === 'time_fraction') {
+    return formatCompactEntry(exampleEntry.comparable);
   }
 
-  return 'למשל 13:45 או 1345';
+  return String(exampleEntry.raw);
 }
 
 function selectedSheet() {
@@ -80,8 +87,8 @@ function renderStudentForm() {
     ${sheet.metrics.map((metric) => `
       <div class="metric-card">
         <label class="field-label" for="${metric.key}">${metric.label}</label>
-        <input id="${metric.key}" name="${metric.key}" placeholder="${inputPlaceholder(metric)}" />
-        <p class="metric-meta">${metricHint(metric)}</p>
+        <input id="${metric.key}" name="${metric.key}" />
+        <p class="metric-meta">דוגמה לציון 90: ${studentExample(metric)}</p>
       </div>
     `).join('')}
     <button type="submit">חשב ציון</button>
@@ -164,7 +171,6 @@ function renderTeacherEntryTable() {
                 <input
                   data-student-index="${index}"
                   data-metric-key="${metric.key}"
-                  placeholder="${inputPlaceholder(metric)}"
                 />
               </td>
             `).join('')}
