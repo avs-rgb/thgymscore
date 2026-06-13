@@ -40,6 +40,12 @@ body {
   margin-bottom: 14px;
 }
 
+.top-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .share-site-button {
   width: auto;
   min-height: 38px;
@@ -86,6 +92,44 @@ p {
   margin: 0 auto;
 }
 
+.home-view {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0 26px;
+}
+
+.home-card {
+  width: min(560px, 100%);
+  text-align: center;
+  padding: 28px;
+}
+
+.home-card h2 {
+  margin-bottom: 10px;
+  color: #5a372c;
+}
+
+.home-subtitle {
+  margin-bottom: 22px;
+  color: #866656;
+}
+
+.home-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.home-action-button {
+  min-height: 180px;
+  font-size: 18px;
+  border-radius: 18px;
+}
+
+.app-shell {
+  display: block;
+}
+
 .panel {
   background: #fffaf4;
   border: 1px solid #eedbcc;
@@ -100,6 +144,14 @@ p {
   width: 326px;
   min-height: 120px;
   justify-content: center;
+}
+
+.back-home-button {
+  min-height: 40px;
+  background: #e7d2c1;
+  color: #6b4333;
+  width: auto;
+  padding: 8px 14px;
 }
 
 .class-select {
@@ -560,6 +612,10 @@ tbody tr:nth-child(5n + 1) {
   .top-controls,
   .tabs-panel {
     flex-direction: column;
+  }
+
+  .home-actions {
+    grid-template-columns: 1fr;
   }
 
   .class-selector-panel {

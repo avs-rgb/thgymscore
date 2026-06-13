@@ -4,6 +4,11 @@ const averageScore = document.querySelector('#average-score');
 const resultsList = document.querySelector('#results-list');
 const studentShareWhatsappButton = document.querySelector('#student-share-whatsapp');
 const shareSiteWhatsappButton = document.querySelector('#share-site-whatsapp');
+const homeView = document.querySelector('#home-view');
+const appShell = document.querySelector('#app-shell');
+const guestEntryButton = document.querySelector('#guest-entry-button');
+const memberEntryButton = document.querySelector('#member-entry-button');
+const backHomeButton = document.querySelector('#back-home-button');
 const tableContainer = document.querySelector('#table-container');
 const classTabsContainer = document.querySelector('#class-tabs');
 const maleStudentTabButton = document.querySelector('#male-student-tab-button');
@@ -30,6 +35,7 @@ let activeView = 'student_male';
 let activeTeacherGenderValue = 'male';
 let latestTeacherResults = [];
 let latestStudentResult = null;
+let currentEntryMode = 'home';
 
 function formatClassName(name) {
   const value = String(name || '').trim();
@@ -65,6 +71,20 @@ function syncTeacherGenderTabs() {
   teacherMaleTabButton.classList.toggle('is-active', activeTeacherGenderValue === 'male');
   teacherFemaleTabButton.classList.toggle('is-active', activeTeacherGenderValue === 'female');
   teacherStudentCountLabel.textContent = activeTeacherGenderValue === 'female' ? 'מספר תלמידות' : 'מספר תלמידים';
+}
+
+function setEntryMode(mode) {
+  currentEntryMode = mode;
+  homeView.classList.toggle('is-hidden', mode !== 'home');
+  appShell.classList.toggle('is-hidden', mode === 'home');
+  backHomeButton.classList.toggle('is-hidden', mode === 'home');
+
+  const guestMode = mode === 'guest';
+  const memberMode = mode === 'member';
+
+  maleStudentTabButton.classList.toggle('is-hidden', memberMode);
+  femaleStudentTabButton.classList.toggle('is-hidden', memberMode);
+  teacherTabButton.classList.toggle('is-hidden', guestMode || memberMode);
 }
 
 function formatCompactEntry(seconds) {
@@ -203,6 +223,8 @@ function shareStudentWhatsapp() {
     `EduFitScore - כיתה ${formatClassName(sheet.name)}`,
     '',
     parts.join(', '),
+    '',
+    window.location.href,
   ];
 
   const url = `https://wa.me/?text=${encodeURIComponent(lines.join('\n'))}`;
@@ -416,6 +438,8 @@ function shareWhatsapp() {
     `EduFitScore - כיתה ${formatClassName(sheet.name)}`,
     '',
     ...studentLines,
+    '',
+    window.location.href,
   ];
 
   const url = `https://wa.me/?text=${encodeURIComponent(lines.join('\n'))}`;
@@ -516,6 +540,7 @@ async function init() {
   createStudentOptions();
   renderCurrentView();
   setActiveView('student_male');
+  setEntryMode('home');
   syncTeacherGenderTabs();
 
   sheetSelect.addEventListener('change', renderCurrentView);
@@ -558,6 +583,19 @@ async function init() {
     activeTeacherGenderValue = 'female';
     syncTeacherGenderTabs();
     renderTeacherView();
+  });
+  guestEntryButton.addEventListener('click', () => {
+    setEntryMode('guest');
+    setActiveView('student_male');
+    renderCurrentView();
+  });
+  memberEntryButton.addEventListener('click', () => {
+    setEntryMode('member');
+    setActiveView('teacher');
+    renderCurrentView();
+  });
+  backHomeButton.addEventListener('click', () => {
+    setEntryMode('home');
   });
 }
 

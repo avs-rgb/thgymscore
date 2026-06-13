@@ -10,13 +10,26 @@
     <main class="page">
       <div class="top-bar">
         <div class="site-credit">created by avs-rgb</div>
-        <button id="share-site-whatsapp" type="button" class="share-site-button">שיתוף האתר ב-WhatsApp</button>
+        <div class="top-bar-actions">
+          <button id="back-home-button" type="button" class="back-home-button is-hidden">חזרה לעמוד הבית</button>
+          <button id="share-site-whatsapp" type="button" class="share-site-button">שיתוף האתר ב-WhatsApp</button>
+        </div>
       </div>
       <section class="hero">
         <h1>מחשבון ציונים בחינוך גופני לפי שכבה</h1>
         <p class="subtitle">בחרו כיתה והשתמשו בטבלאות המקור כדי להמיר תוצאות לציונים, הכניסו תוצאות מספריות בלבד ללא תוים נוספים.</p>
       </section>
 
+      <section id="home-view" class="home-view">
+        <div class="home-card panel">
+          <div class="home-actions">
+            <button id="guest-entry-button" type="button" class="home-action-button">אורחים</button>
+            <button id="member-entry-button" type="button" class="home-action-button secondary-button">חברים</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="app-shell" class="app-shell is-hidden">
       <section class="top-controls">
         <section class="tabs-panel">
           <section class="tabs" aria-label="מצבי שימוש">
@@ -88,6 +101,7 @@
             <div id="teacher-results-table" class="table-container"></div>
           </section>
         </section>
+      </section>
       </section>
     </main>
 
