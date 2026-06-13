@@ -76,29 +76,32 @@ body.accessibility-underline-links button {
 
 .accessibility-fab {
   position: fixed;
-  top: 14px;
-  right: 14px;
+  top: 12px;
+  right: 12px;
   z-index: 40;
   width: auto;
-  min-height: 42px;
-  padding: 10px 16px;
-  border-radius: 16px;
-  background: #2f6fed;
+  min-height: 54px;
+  padding: 12px 20px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #2f6fed 0%, #1f5ddd 100%);
   color: #fff;
-  box-shadow: 0 10px 24px rgba(47, 111, 237, 0.28);
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 14px 30px rgba(47, 111, 237, 0.34);
+  font-size: 1rem;
+  font-weight: 800;
 }
 
 .accessibility-toolbar {
   position: fixed;
-  top: 66px;
-  right: 14px;
+  top: 74px;
+  right: 12px;
   z-index: 41;
-  width: min(320px, calc(100vw - 28px));
-  padding: 16px;
-  border-radius: 20px;
-  border: 1px solid #d9c4b0;
-  background: rgba(255, 250, 244, 0.98);
-  box-shadow: 0 18px 34px rgba(80, 47, 31, 0.18);
+  width: min(360px, calc(100vw - 24px));
+  padding: 18px;
+  border-radius: 22px;
+  border: 2px solid #bfd0f5;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 22px 40px rgba(34, 64, 122, 0.22);
 }
 
 .accessibility-toolbar-header {
@@ -106,7 +109,12 @@ body.accessibility-underline-links button {
   justify-content: space-between;
   align-items: center;
   gap: 10px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
+}
+
+.accessibility-toolbar-header strong {
+  color: #1f3e86;
+  font-size: 1rem;
 }
 
 .accessibility-toolbar-actions {
@@ -116,15 +124,16 @@ body.accessibility-underline-links button {
 }
 
 .accessibility-tool-button {
-  min-height: 42px;
-  background: #f1dccb;
-  color: #6b4333;
-  border: 1px solid rgba(160, 106, 78, 0.18);
+  min-height: 46px;
+  background: #eef4ff;
+  color: #28477f;
+  border: 1px solid rgba(83, 119, 196, 0.2);
   border-radius: 14px;
+  font-weight: 700;
 }
 
 .accessibility-reset-button {
-  background: #8f5a44;
+  background: #315fc8;
   color: #fff;
 }
 
@@ -822,10 +831,12 @@ tbody tr:nth-child(5n + 1) {
   .accessibility-fab {
     top: 10px;
     right: 10px;
+    min-height: 48px;
+    padding: 10px 16px;
   }
 
   .accessibility-toolbar {
-    top: 58px;
+    top: 66px;
     right: 10px;
     width: calc(100vw - 20px);
   }
